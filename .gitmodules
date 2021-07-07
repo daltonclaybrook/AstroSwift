@@ -1,0 +1,3 @@
+[submodule "SpaceKit"]
+	path = SpaceKit
+	url = git@github.com:daltonclaybrook/SpaceKit.git
