@@ -1,12 +1,44 @@
-//
-//  SolarSystemView.swift
-//  AstroSwift
-//
-//  Created by Dalton Claybrook on 7/5/21.
-//
-
+import ComposableArchitecture
 import SpaceKit
 import SwiftUI
+
+struct SolarSystemState {
+    var isAnimating: Bool
+    var currentDate: Date
+}
+
+enum SolarSystemAction: Equatable {
+    case startAnimating
+    case stopAnimating
+    case setCurrentDate(Date)
+}
+
+struct SolarSystemEnvironment {
+    let dateIncrement: TimeInterval
+}
+
+let solarSystemReducer = Reducer<SolarSystemState, SolarSystemAction, SolarSystemEnvironment> { state, action, environment in
+    struct AnimationCancellable: Hashable {}
+
+    switch action {
+    case .startAnimating:
+        state.isAnimating = true
+        let nextDate = state.currentDate.addingTimeInterval(environment.dateIncrement)
+
+        return Effect(value: SolarSystemAction.setCurrentDate(nextDate))
+            .cancellable(id: AnimationCancellable(), cancelInFlight: true)
+            .delay(for: DispatchQueue.SchedulerTimeType.Stride(DispatchTimeInterval.microseconds(16667)), tolerance: 0.0, scheduler: DispatchQueue.main)
+            .eraseToEffect()
+
+    case .stopAnimating:
+        state.isAnimating = false
+        return Effect.cancel(id: AnimationCancellable())
+
+    case .setCurrentDate(let date):
+        state.currentDate = date
+        return .none
+    }
+}
 
 struct SolarSystemView: View {
     @ObservedObject

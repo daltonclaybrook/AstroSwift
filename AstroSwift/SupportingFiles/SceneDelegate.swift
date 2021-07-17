@@ -9,7 +9,10 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
         let rootView = ContentView(store: Store(
-            initialState: AppState(isPresentingSolarSystem: false),
+            initialState: AppState(
+                isPresentingSolarSystem: false,
+                photoOfTheDay: .idle
+            ),
             reducer: appReducer,
             environment: AppEnvironment())
         )
