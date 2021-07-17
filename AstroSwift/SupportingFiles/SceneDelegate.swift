@@ -1,3 +1,4 @@
+import ComposableArchitecture
 import UIKit
 
 final class SceneDelegate: NSObject, UIWindowSceneDelegate {
@@ -7,7 +8,11 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         let window = UIWindow(windowScene: windowScene)
-        let rootView = ContentView()
+        let rootView = ContentView(store: Store(
+            initialState: AppState(isPresentingSolarSystem: false),
+            reducer: appReducer,
+            environment: AppEnvironment())
+        )
         let hostingController = HostingController(rootView: rootView)
         window.rootViewController = hostingController
         self.window = window
