@@ -21,20 +21,17 @@ let photoOfTheDayReducer = Reducer<PhotoOfTheDayState, PhotoOfTheDayAction, Phot
     switch action {
     case .fetchPhoto:
         state = .loading
-        return .future { attemptToFulfill in
-            Task {
-                let astronomy = Astronomy(nasaAPIKey: NASAAPIKey.apiKey)
-                do {
-                    let photo = try await astronomy.fetchPhoto()
-                    attemptToFulfill(.success(.photoLoaded(photo)))
-                } catch let error {
-                    attemptToFulfill(.success(.failedToLoadPhoto(error)))
-                }
+        return .future {
+            let astronomy = Astronomy(nasaAPIKey: NASAAPIKey.apiKey)
+            do {
+                let photo = try await astronomy.fetchPhoto()
+                return .photoLoaded(photo)
+            } catch let error {
+                return .failedToLoadPhoto(error)
             }
         }
 
     case .photoLoaded(let photo):
-        print("Loaded photo: \(photo)")
         state = .loaded(photo)
         return .none
 
