@@ -27,7 +27,8 @@ let contentViewReducer = Reducer<AppState, AppAction, AppEnvironment> { state, a
         // This action is handled by another reducer
         return .none
     }
-}.binding(action: /AppAction.binding)
+}
+.binding(action: /AppAction.binding)
 
 let pulledBackPhotoReducer = photoOfTheDayReducer.pullback(
     state: \AppState.photoOfTheDay,
@@ -35,7 +36,10 @@ let pulledBackPhotoReducer = photoOfTheDayReducer.pullback(
     environment: { (_: AppEnvironment) in PhotoOfTheDayEnvironment() }
 )
 
-let appReducer = Reducer.combine(contentViewReducer, pulledBackPhotoReducer)
+let appReducer = Reducer.combine(
+    contentViewReducer,
+    pulledBackPhotoReducer
+)
 
 struct ContentView: View {
     let store: Store<AppState, AppAction>
@@ -44,7 +48,7 @@ struct ContentView: View {
         NavigationView {
             WithViewStore(store) { viewStore in
                 List {
-                    NavigationLink.init("Solar System", isActive: viewStore.binding(keyPath: \.isPresentingSolarSystem, send: AppAction.binding)) {
+                    NavigationLink("Solar System", isActive: viewStore.binding(keyPath: \.isPresentingSolarSystem, send: AppAction.binding)) {
                         SolarSystemWrapperView(store: store)
                     }
 
@@ -68,7 +72,7 @@ struct SolarSystemWrapperView: View {
     var body: some View {
         WithViewStore(store) { viewStore in
             ZStack(alignment: .topLeading) {
-                SolarSystemView()
+                SolarSystemView(store: .default)
                 Button(action: { viewStore.send(.dismissSolarSystem) }) {
                     Image(systemName: "xmark").foregroundColor(.white).padding(40)
                 }

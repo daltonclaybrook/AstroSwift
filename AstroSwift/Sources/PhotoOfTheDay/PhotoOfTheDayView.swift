@@ -48,15 +48,15 @@ struct PhotoOfTheDayWrapperView: View {
         WithViewStore(store) { viewStore in
             switch viewStore.state {
             case .idle:
-                AnyView(ProgressView().onAppear {
+                ProgressView().onAppear {
                     viewStore.send(.fetchPhoto)
-                })
+                }
             case .loading:
-                AnyView(ProgressView())
+                ProgressView()
             case .loaded(let photo):
-                AnyView(PhotoOfTheDayView(photo: photo))
+                PhotoOfTheDayView(photo: photo)
             case .errorLoading(let description):
-                AnyView(Text("Failed with error: \(description)"))
+                Text("Failed with error: \(description)")
             }
         }.navigationBarTitle(Text("Photo of the Day"), displayMode: .inline)
     }
