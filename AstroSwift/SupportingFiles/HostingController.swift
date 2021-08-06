@@ -1,6 +1,6 @@
 import SwiftUI
 
-final class HostingController: UIHostingController<ContentView> {
+final class HostingController: UIHostingController<MainMenuView> {
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
     }

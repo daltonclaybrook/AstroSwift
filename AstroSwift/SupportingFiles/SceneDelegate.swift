@@ -8,7 +8,7 @@ final class SceneDelegate: NSObject, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         let window = UIWindow(windowScene: windowScene)
-        let rootView = ContentView(store: Store(
+        let rootView = MainMenuView(store: Store(
             initialState: AppState(
                 isPresentingSolarSystem: false,
                 photoOfTheDay: .idle

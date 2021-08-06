@@ -1,47 +1,7 @@
 import ComposableArchitecture
 import SwiftUI
 
-struct AppState: Equatable {
-    var isPresentingSolarSystem: Bool
-    var photoOfTheDay: PhotoOfTheDayState
-}
-
-enum AppAction {
-    case dismissSolarSystem
-    case binding(BindingAction<AppState>)
-    case photoOfTheDay(PhotoOfTheDayAction)
-}
-
-struct AppEnvironment {}
-
-let contentViewReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
-    switch action {
-    case .dismissSolarSystem:
-        state.isPresentingSolarSystem = false
-        return .none
-
-    case .binding:
-        return .none
-
-    case .photoOfTheDay:
-        // This action is handled by another reducer
-        return .none
-    }
-}
-.binding(action: /AppAction.binding)
-
-let pulledBackPhotoReducer = photoOfTheDayReducer.pullback(
-    state: \AppState.photoOfTheDay,
-    action: /AppAction.photoOfTheDay,
-    environment: { (_: AppEnvironment) in PhotoOfTheDayEnvironment() }
-)
-
-let appReducer = Reducer.combine(
-    contentViewReducer,
-    pulledBackPhotoReducer
-)
-
-struct ContentView: View {
+struct MainMenuView: View {
     let store: Store<AppState, AppAction>
 
     var body: some View {
@@ -81,9 +41,9 @@ struct SolarSystemWrapperView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct MainMenuView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(store: Store(
+        MainMenuView(store: Store(
             initialState: AppState(
                 isPresentingSolarSystem: false,
                 photoOfTheDay: .idle
